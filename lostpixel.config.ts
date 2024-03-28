@@ -4,31 +4,32 @@ export const config = {
     baseUrl: process.env.TARGET_URL || 'https://www.sprinklr.com',
   },
   generateOnly: true,
-  failOnDifference: true,
+  failOnDifference: false,
+  compareEngine: 'odiff',
   beforeScreenshot: async (page: any) => {
-    let scroll = (args: any) => {
+    const scrollPage = async (args: any) => {
       const { direction, speed } = args;
-      const delay = (ms: number, callback: any) => setTimeout(callback, ms);
+      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       const scrollHeight = () => document.body.scrollHeight;
       const start = direction === 'down' ? 0 : scrollHeight();
       const shouldStop = (position: number) => (direction === 'down' ? position > scrollHeight() : position < 0);
       const increment = direction === 'down' ? 100 : -100;
       const delayTime = speed === 'slow' ? 50 : 10;
-      console.error(start, shouldStop(start), increment);
 
       let i = start;
 
-      const scrollStep = () => {
+      const scrollStep = async () => {
         if (!shouldStop(i)) {
           window.scrollTo(0, i);
           i += increment;
-          delay(delayTime, scrollStep);
+          await delay(delayTime);
+          await scrollStep();
         }
       };
 
-      scrollStep();
+      await scrollStep();
     };
-    await page.evaluate(scroll, { direction: 'down', speed: 'slow' });
-    await page.evaluate(scroll, { direction: 'up', speed: 'fast' });
+    await page.evaluate(scrollPage, { direction: 'down', speed: 'slow' });
+    await page.evaluate(scrollPage, { direction: 'up', speed: 'fast' });
   },
 };

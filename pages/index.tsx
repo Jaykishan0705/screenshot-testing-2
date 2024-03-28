@@ -22,12 +22,26 @@ export default function Home() {
   const compare = async () => {
     setIsLoading(true);
     setErr('');
+
     try {
-      await axios.get(`/api/compare?baseUrl=${baseUrl}&compareUrl=${compareUrl}`);
+      const { data } = await axios.post('/api/taskHandler', { baseUrl, compareUrl });
+      const taskId = data.taskId;
+
+      const intervalId = setInterval(async () => {
+        try {
+          const { data } = await axios.get(`/api/taskHandler?taskId=${taskId}`);
+          if (data.status === 'completed' || data.status === 'error') {
+            clearInterval(intervalId);
+            setIsLoading(false);
+          }
+        } catch (e) {
+          console.log(e);
+          clearInterval(intervalId);
+          setIsLoading(false);
+        }
+      }, 20000);
     } catch (e: any) {
-      console.log(e);
       setErr(e?.response?.data?.error);
-    } finally {
       setIsLoading(false);
     }
   };

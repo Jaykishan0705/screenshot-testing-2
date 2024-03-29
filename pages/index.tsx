@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Box } from '@sprinklrjs/spaceweb/box';
 import { Input } from '@sprinklrjs/spaceweb/input';
 import { Button } from '@sprinklrjs/spaceweb/button';
-import VrtDisplay from '@/src/components/VrtDisplay';
+import { VRTDisplay } from '@/src/components/VRTDisplay';
 import SpacewebProvider from '@sprinklrjs/spaceweb/spacewebProvider';
 
 //light theme
@@ -76,7 +76,7 @@ export default function Home() {
           <Button onClick={compare} isLoading={isLoading} className="w-12">
             Compare
           </Button>
-          {taskStatus === 'completed' ? <VrtDisplay /> : null}
+          {taskStatus === 'completed' ? <VRTDisplay /> : null}
           {err ? <Typography className="spr-support-error-text">{err}</Typography> : null}
         </Box>
       </SpacewebProvider>

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Box } from '@sprinklrjs/spaceweb/box';
 import { Input } from '@sprinklrjs/spaceweb/input';
 import { Button } from '@sprinklrjs/spaceweb/button';
+import VrtDisplay from '@/src/components/VrtDisplay';
 import SpacewebProvider from '@sprinklrjs/spaceweb/spacewebProvider';
 
 //light theme
@@ -17,11 +18,14 @@ export default function Home() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [taskStatus, setTaskStatus] = useState('');
+
   const [err, setErr] = useState('');
 
   const compare = async () => {
     setIsLoading(true);
     setErr('');
+    setTaskStatus('');
 
     try {
       const { data } = await axios.post('/api/taskHandler', { baseUrl, compareUrl });
@@ -30,6 +34,7 @@ export default function Home() {
       const intervalId = setInterval(async () => {
         try {
           const { data } = await axios.get(`/api/taskHandler?taskId=${taskId}`);
+          setTaskStatus(data.status);
           if (data.status === 'completed' || data.status === 'error') {
             clearInterval(intervalId);
             setIsLoading(false);
@@ -39,7 +44,7 @@ export default function Home() {
           clearInterval(intervalId);
           setIsLoading(false);
         }
-      }, 20000);
+      }, 10000);
     } catch (e: any) {
       setErr(e?.response?.data?.error);
       setIsLoading(false);
@@ -71,7 +76,8 @@ export default function Home() {
           <Button onClick={compare} isLoading={isLoading} className="w-12">
             Compare
           </Button>
-          <Typography className="spr-support-error-text">{err}</Typography>
+          {taskStatus === 'completed' ? <VrtDisplay /> : null}
+          {err ? <Typography className="spr-support-error-text">{err}</Typography> : null}
         </Box>
       </SpacewebProvider>
     </>

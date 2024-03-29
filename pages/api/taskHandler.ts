@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { exec as execCallback } from 'child_process';
 import { v4 as uuidv4 } from 'uuid';
 
-const tasks: Record<string, string> = {}; // Store task status
+import tasks from '@/src/tasks';
 
 const exec = (command: string) =>
   new Promise(resolve => {
@@ -23,9 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Generate a unique task ID
     const newTaskId = uuidv4();
-    tasks[newTaskId] = 'in progress'; // Set initial status
 
-    // Start the task asynchronously
+    tasks.setTaskStatus(newTaskId, 'in progress');
+
     process.nextTick(async () => {
       try {
         process.env.TARGET_URL = baseUrl;
@@ -33,25 +33,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         process.env.TARGET_URL = compareUrl;
         await exec('yarn lost-pixel');
+        await exec('node internals/scripts/lostPixelJson.js');
 
-        tasks[newTaskId] = 'completed'; // Update status
+        tasks.setTaskStatus(newTaskId, 'completed');
       } catch (error) {
-        tasks[newTaskId] = 'error'; // Update status
+        tasks.setTaskStatus(newTaskId, 'error');
       }
     });
 
-    // Return the task ID to the client
+    // Return the task ID to the client immediately
     res.status(200).json({ taskId: newTaskId });
   } else if (req.method === 'GET') {
     // This is the /checkTaskStatus endpoint
     const taskId = req.query.taskId as string;
 
-    if (!taskId || !tasks[taskId]) {
+    if (!taskId || !tasks.getTaskStatus(taskId)) {
       return res.status(404).json({ error: 'Task not found' });
     }
 
     // Return the status of the task
-    res.status(200).json({ status: tasks[taskId] });
+    res.status(200).json({ status: tasks.getTaskStatus(taskId) });
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }

@@ -19,9 +19,12 @@ let tasks: Tasks;
 if (process.env.NODE_ENV === 'production') {
   tasks = new Tasks();
 } else {
+  //@ts-ignore
   if (!global.tasks) {
+    //@ts-ignore
     global.tasks = new Tasks();
   }
+  //@ts-ignore
   tasks = global.tasks;
 }
 

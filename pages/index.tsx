@@ -69,14 +69,16 @@ export default function Home() {
             value={baseUrl}
             onChange={e => setBaseUrl(e.target.value)}
             placeholder="https://www.sprinklr.com"
+            disabled={isLoading}
           />
           <Input
             className="w-15/24"
             value={compareUrl}
             onChange={e => setCompareUrl(e.target.value)}
             placeholder="https://staging.sprinklr.com"
+            disabled={isLoading}
           />
-          <Button onClick={compare} isLoading={isLoading} className="w-12">
+          <Button onClick={compare} isLoading={isLoading} className="w-12" disabled={isLoading}>
             Compare
           </Button>
           {images ? <VRTDisplay images={images} /> : null}

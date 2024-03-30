@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Box } from '@sprinklrjs/spaceweb/box';
 import { Input } from '@sprinklrjs/spaceweb/input';
 import { Button } from '@sprinklrjs/spaceweb/button';
-import { VRTDisplay } from '@/src/components/VRTDisplay';
+import { VRTDisplay, ImageType } from '@/src/components/VRTDisplay';
 import SpacewebProvider from '@sprinklrjs/spaceweb/spacewebProvider';
 
 //light theme
@@ -18,24 +18,27 @@ export default function Home() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [taskStatus, setTaskStatus] = useState('');
+  const [images, setImages] = useState<ImageType[] | undefined>();
 
   const [err, setErr] = useState('');
 
   const compare = async () => {
     setIsLoading(true);
     setErr('');
-    setTaskStatus('');
 
     try {
-      const { data } = await axios.post('/api/taskHandler', { baseUrl, compareUrl });
+      const { data } = await axios.post('/api/initiateCompare', { baseUrl, compareUrl });
       const taskId = data.taskId;
 
       const intervalId = setInterval(async () => {
         try {
-          const { data } = await axios.get(`/api/taskHandler?taskId=${taskId}`);
-          setTaskStatus(data.status);
-          if (data.status === 'completed' || data.status === 'error') {
+          const { data } = await axios.get(`/api/trackCompareStatus?taskId=${taskId}`);
+          if (data.status === 'completed') {
+            const { data } = await axios.get('/api/getImages');
+            setImages(data);
+            clearInterval(intervalId);
+            setIsLoading(false);
+          } else if (data.status === 'error') {
             clearInterval(intervalId);
             setIsLoading(false);
           }
@@ -76,7 +79,7 @@ export default function Home() {
           <Button onClick={compare} isLoading={isLoading} className="w-12">
             Compare
           </Button>
-          {taskStatus === 'completed' ? <VRTDisplay /> : null}
+          {images ? <VRTDisplay images={images} /> : null}
           {err ? <Typography className="spr-support-error-text">{err}</Typography> : null}
         </Box>
       </SpacewebProvider>

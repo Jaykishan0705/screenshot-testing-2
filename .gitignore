@@ -40,4 +40,3 @@ next-env.d.ts
 
 #lostpixel
 .lostpixel/
-internals/data/display-data.json

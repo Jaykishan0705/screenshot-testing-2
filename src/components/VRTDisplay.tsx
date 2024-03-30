@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useState, ReactElement } from 'react';
 import { Image } from '@sprinklrjs/spaceweb/image';
-import imgArr from '@/internals/data/display-data.json';
 import { Box } from '@sprinklrjs/spaceweb/box';
 import { RadioGroup, Radio } from '@sprinklrjs/spaceweb/radio';
 import { Modal, ModalBody } from '@sprinklrjs/spaceweb/modal';
 
-type ImageType = {
+type ShowType = 'changed' | 'unchanged' | 'all';
+
+export type ImageType = {
   srcBase: string;
   srcCur: string;
   srcDiff: string;
@@ -14,14 +15,12 @@ type ImageType = {
   alt: string;
 };
 
-type ShowType = 'changed' | 'unchanged' | 'all';
-
 function shouldDisplay(objShowType: string, showType: ShowType): boolean {
   if (showType === 'all') return true;
   return objShowType === showType;
 }
 
-export const VRTDisplay = (): ReactElement => {
+export const VRTDisplay = ({ images }: { images: ImageType[] }): ReactElement => {
   const [showType, setShowType] = useState<ShowType>('changed');
   const [imageUrl, setImageUrl] = useState('');
   const isOpen = Boolean(imageUrl);
@@ -38,49 +37,68 @@ export const VRTDisplay = (): ReactElement => {
     <>
       <Box className="p-4 flex border-1 border-solid spr-focus-01 gap-4">
         <Box className="flex flex-col w-2/24 gap-6">
-        <Box className="flex justify-center text-11 font-bold">Path</Box>
-          {imgArr
-            .filter((obj: ImageType) => shouldDisplay(obj.showType, showType))
-            .map((obj: ImageType, imageNo: number) => (
-              <Box className="px-4 flex justify-center items-center h-64 text-11 font-bold" style={{width:"100%",height:"80vh"}} key={obj.alt}>
-                {imageNo + 1}. {obj.alt}
+          <Box className="flex justify-center text-11 font-bold">Path</Box>
+          {images
+            .filter((image: ImageType) => shouldDisplay(image.showType, showType))
+            .map((image: ImageType, imageNo: number) => (
+              <Box
+                className="px-4 flex justify-center items-center h-64 text-11 font-bold"
+                style={{ width: '100%', height: '80vh' }}
+                key={image.alt}
+              >
+                {imageNo + 1}. {image.alt}
               </Box>
             ))}
         </Box>
 
         <Box className="flex flex-col w-6/24 gap-6">
-        <Box className="flex justify-center text-11 font-bold">Baseline</Box>
-          {imgArr
-            .filter((obj: ImageType) => shouldDisplay(obj.showType, showType))
-            .map((obj: ImageType) => (
-              <Box onClick={() => openPopUp(obj.srcBase)} className="overflow-y-hidden hover:cursor-pointer" style={{width:"100%",height:"80vh"}} key={obj.alt}>
-                <Image src={obj.srcBase} alt={obj.alt} className="object-contain h-full w-full" />
+          <Box className="flex justify-center text-11 font-bold">Baseline</Box>
+          {images
+            .filter((image: ImageType) => shouldDisplay(image.showType, showType))
+            .map((image: ImageType) => (
+              <Box
+                onClick={() => openPopUp(image.srcBase)}
+                className="overflow-y-hidden hover:cursor-pointer"
+                style={{ width: '100%', height: '80vh' }}
+                key={image.alt}
+              >
+                <Image src={image.srcBase} alt={image.alt} className="object-contain h-full w-full" />
               </Box>
             ))}
         </Box>
 
         <Box className="flex flex-col w-6/24 gap-6">
-        <Box className="flex justify-center text-11 font-bold">Current</Box>
-          {imgArr
-            .filter((obj: ImageType) => shouldDisplay(obj.showType, showType))
-            .map((obj: ImageType) => (
-              <Box onClick={() => openPopUp(obj.srcCur)} key={obj.alt}className="overflow-y-hidden hover:cursor-pointer" style={{width:"100%",height:"80vh"}}>
-                <Image src={obj.srcCur} alt={obj.alt} className="object-contain h-full w-full"/>
+          <Box className="flex justify-center text-11 font-bold">Current</Box>
+          {images
+            .filter((image: ImageType) => shouldDisplay(image.showType, showType))
+            .map((image: ImageType) => (
+              <Box
+                onClick={() => openPopUp(image.srcCur)}
+                key={image.alt}
+                className="overflow-y-hidden hover:cursor-pointer"
+                style={{ width: '100%', height: '80vh' }}
+              >
+                <Image src={image.srcCur} alt={image.alt} className="object-contain h-full w-full" />
               </Box>
             ))}
         </Box>
 
         <Box className="flex flex-col w-6/24 gap-6">
-        <Box className="flex justify-center text-11 font-bold">Difference</Box>
-          {imgArr
-            .filter((obj: ImageType) => shouldDisplay(obj.showType, showType))
-            .map((obj: ImageType) => {
-              if (obj.showType !== 'changed') {
-                return <Box style={{width:"100%",height:"80vh"}}/>;
+          <Box className="flex justify-center text-11 font-bold">Difference</Box>
+          {images
+            .filter((image: ImageType) => shouldDisplay(image.showType, showType))
+            .map((image: ImageType) => {
+              if (image.showType !== 'changed') {
+                return <Box style={{ width: '100%', height: '80vh' }} key={image.alt} />;
               } else {
                 return (
-                  <Box onClick={() => openPopUp(obj.srcDiff)} key={obj.alt} className="overflow-y-hidden hover:cursor-pointer" style={{width:"100%",height:"80vh"}}>
-                    <Image src={obj.srcDiff} alt={obj.alt} className="object-contain h-full w-full " />
+                  <Box
+                    onClick={() => openPopUp(image.srcDiff)}
+                    key={image.alt}
+                    className="overflow-y-hidden hover:cursor-pointer"
+                    style={{ width: '100%', height: '80vh' }}
+                  >
+                    <Image src={image.srcDiff} alt={image.alt} className="object-contain h-full w-full " />
                   </Box>
                 );
               }

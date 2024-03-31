@@ -3,16 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
     "@sprinklrjs/spaceweb": "^12.33.2",
     "@sprinklrjs/spaceweb-themes": "^12.33.2",
     "axios": "^1.6.8",
+    "body-parser": "^1.20.2",
     "child_process": "^1.0.2",
+    "express": "^4.19.2",
     "lost-pixel": "3.4.3",
     "next": "14.0.4",
     "playwright": "1.37.0",

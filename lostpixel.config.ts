@@ -2,9 +2,9 @@ export const config = {
   pageShots: {
     pages: [
       { path: '/pricing/customer-service/', name: 'pricing-customer-service' },
-      { path: '/pricing/social-media-management/', name: 'pricing-social-media-management' },
-      { path: '/pricing/consumer-intelligence', name: 'pricing-consumer-intelligence' },
-      { path: '/pricing/marketing-and-advertising', name: 'pricing-marketing-and-advertising' },
+      // { path: '/pricing/social-media-management/', name: 'pricing-social-media-management' },
+      // { path: '/pricing/consumer-intelligence', name: 'pricing-consumer-intelligence' },
+      // { path: '/pricing/marketing-and-advertising', name: 'pricing-marketing-and-advertising' },
     ],
     baseUrl: process.env.TARGET_URL || 'https://www.sprinklr.com',
   },

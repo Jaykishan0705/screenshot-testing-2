@@ -1,7 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { exec as execCallback } from 'child_process';
 
 const fs = require('fs');
 const path = require('path');
+
+const exec = (command: string) =>
+  new Promise(resolve => {
+    execCallback(command, (err, stdout) => {
+      console.log(stdout);
+      console.error('err:', err);
+      return resolve(stdout);
+    });
+  });
 
 function getAllScenarioFiles(directoryPath: string): string[] {
   const scenarioFiles: string[] = [];
@@ -28,6 +38,11 @@ function getAllScenarioFiles(directoryPath: string): string[] {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('__dir', __dirname, __filename);
+  await exec('ls && cd ___vc && ls');
+
+  await exec('cd .. && ls');
+
   const basePath = './public/resources/.lostpixel/baseline';
   const scenarioFilesBase = getAllScenarioFiles(basePath);
 

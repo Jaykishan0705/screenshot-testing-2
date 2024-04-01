@@ -35,8 +35,32 @@ export default function Home() {
         try {
           const { data } = await axios.get(`/api/trackCompareStatus?taskId=${taskId}`);
           if (data.status === 'completed') {
-            const { data } = await axios.get('/api/getImages');
-            setImages(data);
+            setImages([
+              {
+                "fileName": "pricing-consumer-intelligence.png",
+                "baseImageSrc": "resources/.lostpixel/baseline/pricing-consumer-intelligence.png",
+                "currentImageSrc": "resources/.lostpixel/baseline/pricing-consumer-intelligence.png",
+                "diffImageSrc": "resources/.lostpixel/difference/pricing-consumer-intelligence.png"
+              },
+              {
+                "fileName": "pricing-customer-service.png",
+                "baseImageSrc": "resources/.lostpixel/baseline/pricing-customer-service.png",
+                "currentImageSrc": "resources/.lostpixel/baseline/pricing-customer-service.png",
+                "diffImageSrc": "resources/.lostpixel/difference/pricing-customer-service.png"
+              },
+              {
+                "fileName": "pricing-marketing-and-advertising.png",
+                "baseImageSrc": "resources/.lostpixel/baseline/pricing-marketing-and-advertising.png",
+                "currentImageSrc": "resources/.lostpixel/baseline/pricing-marketing-and-advertising.png",
+                "diffImageSrc": "resources/.lostpixel/difference/pricing-marketing-and-advertising.png"
+              },
+              {
+                "fileName": "pricing-social-media-management.png",
+                "baseImageSrc": "resources/.lostpixel/baseline/pricing-social-media-management.png",
+                "currentImageSrc": "resources/.lostpixel/baseline/pricing-social-media-management.png",
+                "diffImageSrc": "resources/.lostpixel/difference/pricing-social-media-management.png"
+              }
+            ]);
             clearInterval(intervalId);
             setIsLoading(false);
           } else if (data.status === 'error') {

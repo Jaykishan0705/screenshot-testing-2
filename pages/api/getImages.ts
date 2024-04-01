@@ -38,29 +38,34 @@ function getAllScenarioFiles(directoryPath: string): string[] {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('__dir', __dirname, __filename);
-  await exec('ls && cd ___vc && ls');
-
-  await exec('cd .. && ls');
-
-  const basePath = './public/resources/.lostpixel/baseline';
-  const scenarioFilesBase = getAllScenarioFiles(basePath);
-
-  const diffPath = './public/resources/.lostpixel/difference';
-  const scenarioFilesDiff = getAllScenarioFiles(diffPath);
-
-  const images = scenarioFilesBase.map(file => {
-    let showType = 'unchanged';
-    if (scenarioFilesDiff.includes(file)) showType = 'changed';
-
-    return {
-      srcBase: `resources/.lostpixel/baseline/${file}.png`,
-      srcCur: `resources/.lostpixel/current/${file}.png`,
-      srcDiff: `resources/.lostpixel/difference/${file}.png`,
-      showType,
-      alt: file,
-    };
+  const baselineDir = path.join(process.cwd(), 'public', 'resources','.lostpixel','baseline');
+  const baselineImageFiles = fs.readdirSync(baselineDir);
+  const baselineFiles = baselineImageFiles.map((file: string) => {
+    return file;
   });
+
+  const currentDir = path.join(process.cwd(), 'public', 'resources','.lostpixel','current');
+  const currentImageFiles = fs.readdirSync(currentDir);
+  const currentFiles = currentImageFiles.map((file: string) => {
+    return file;
+  });
+
+  const diffDir = path.join(process.cwd(), 'public', 'resources','.lostpixel','difference');
+  const diffImageFiles = fs.readdirSync(diffDir);
+  const diffFiles = diffImageFiles.map((file: string) => {
+    return file;
+  });
+
+
+  const images =  baselineFiles.map((file: string) => {
+    return {
+      fileName: file,
+      baseImageSrc: `resources/.lostpixel/baseline/${file}`,
+      currentImageSrc: `resources/.lostpixel/baseline/${file}`,
+      diffImageSrc: diffFiles.includes(file) ?  `resources/.lostpixel/difference/${file}`: undefined,
+    }
+  })
+
 
   res.status(200).json(images);
 }

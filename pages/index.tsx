@@ -23,6 +23,7 @@ export default function Home() {
   const [err, setErr] = useState('');
 
   const compare = async () => {
+    setImages(undefined);
     setIsLoading(true);
     setErr('');
 

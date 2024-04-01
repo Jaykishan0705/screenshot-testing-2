@@ -30,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       process.env.TARGET_URL = compareUrl;
       await exec('yarn lost-pixel');
-      await exec('node internals/scripts/lostPixelJson.js');
 
       tasks.setTaskStatus(newTaskId, 'completed');
     } catch (error) {

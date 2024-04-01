@@ -6,11 +6,6 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    outputFileTracingIncludes: {
-      'api/getImages': ['public/**/*','public/resources/**/*']
-    }
-  }
 };
 
 module.exports = nextConfig;

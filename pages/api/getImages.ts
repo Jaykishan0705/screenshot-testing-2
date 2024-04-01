@@ -40,6 +40,12 @@ function getAllScenarioFiles(directoryPath: string): string[] {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('__dir', __dirname, __filename);
   await exec('ls');
+  await exec('cd public && ls');
+  console.log('--------------');
+  await exec('cd resources && ls');
+  console.log('---------------');
+  await exec('cd .. && cd ..')
+
 
   const baselineDir = path.join(process.cwd(), 'resources','.lostpixel','baseline');
   const baselineImageFiles = fs.readdirSync(baselineDir);

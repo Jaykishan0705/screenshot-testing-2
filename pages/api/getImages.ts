@@ -41,19 +41,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('__dir', __dirname, __filename);
   await exec('ls');
 
-  const baselineDir = path.join(process.cwd(), 'resources','.lostpixel','baseline');
+  const baselineDir = path.join(process.cwd(),'public', 'resources','.lostpixel','baseline');
   const baselineImageFiles = fs.readdirSync(baselineDir);
   const baselineFiles = baselineImageFiles.map((file: string) => {
     return file;
   });
 
-  const currentDir = path.join(process.cwd(), 'resources','.lostpixel','current');
+  const currentDir = path.join(process.cwd(),'public', 'resources','.lostpixel','current');
   const currentImageFiles = fs.readdirSync(currentDir);
   const currentFiles = currentImageFiles.map((file: string) => {
     return file;
   });
 
-  const diffDir = path.join(process.cwd(), 'resources','.lostpixel','difference');
+  const diffDir = path.join(process.cwd(),'public', 'resources','.lostpixel','difference');
   const diffImageFiles = fs.readdirSync(diffDir);
   const diffFiles = diffImageFiles.map((file: string) => {
     return file;

@@ -8,7 +8,7 @@ const nextConfig = {
   },
   experimental: {
     outputFileTracingIncludes: {
-      'api/getImages': ['public/**/*']
+      'api/getImages': ['public/**/*','public/resources/**/*']
     }
   }
 };

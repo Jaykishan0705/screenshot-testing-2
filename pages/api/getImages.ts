@@ -59,7 +59,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return file;
   });
 
-
   const images =  baselineFiles.map((file: string) => {
     return {
       fileName: file,
@@ -68,7 +67,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       diffImageSrc: diffFiles.includes(file) ?  `resources/.lostpixel/difference/${file}`: undefined,
     }
   })
-
 
   res.status(200).json(images);
 }

@@ -35,8 +35,10 @@ export default function Home() {
         try {
           const { data } = await axios.get(`/api/trackCompareStatus?taskId=${taskId}`);
           if (data.status === 'completed') {
-            const { data } = await axios.get('/api/getImages');
-            setImages(data);
+            // const { data } = await axios.get('/api/getImages');
+            // setImages(data);
+            const response = await fetch(`/api/get-images`);
+            console.log('response',response);
             clearInterval(intervalId);
             setIsLoading(false);
           } else if (data.status === 'error') {

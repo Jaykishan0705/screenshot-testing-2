@@ -47,28 +47,6 @@ export default function Home() {
 
     try {
       const { data } = await axios.post('/api/initiateCompare', { baseUrl, compareUrl });
-      const taskId = data.taskId;
-
-      const intervalId = setInterval(async () => {
-        try {
-          const { data } = await axios.get(`/api/trackCompareStatus?taskId=${taskId}`);
-          if (data.status === 'completed') {
-            // const { data } = await axios.get('/api/getImages');
-            // setImages(data);
-            const response = await fetch(`/api/getImages`);
-            console.log('response',response);
-            clearInterval(intervalId);
-            setIsLoading(false);
-          } else if (data.status === 'error') {
-            clearInterval(intervalId);
-            setIsLoading(false);
-          }
-        } catch (e) {
-          console.log(e);
-          clearInterval(intervalId);
-          setIsLoading(false);
-        }
-      }, 10000);
     } catch (e: any) {
       setErr(e?.response?.data?.error);
       setIsLoading(false);

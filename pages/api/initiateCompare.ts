@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { exec as execCallback } from 'child_process';
-import { v4 as uuidv4 } from 'uuid';
-import { runner } from 'lost-pixel/dist/runner'
-
-import tasks from '@/src/tasks';
+const fs = require('fs');
 
 const exec = (command: string) =>
   new Promise(resolve => {
@@ -15,26 +12,18 @@ const exec = (command: string) =>
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { baseUrl, compareUrl } = req.body;
+  // Source and destination paths
+  const sourcePath = 'pages/api/database/v1/vercel.svg';
+  const destinationPath = 'pages/api/database/v2/vercel.svg';
 
-  if (!baseUrl || !compareUrl) {
-    return res.status(500).json({ error: 'baseUrl and compareUrl are required' });
-  }
-
-  const newTaskId = uuidv4();
-
-  tasks.setTaskStatus(newTaskId, 'in progress');
-
-  process.nextTick(async () => {
-    try {
-
-      await exec('yarn lost-pixel');
-
-      tasks.setTaskStatus(newTaskId, 'completed');
-    } catch (error) {
-      tasks.setTaskStatus(newTaskId, 'error');
+  // Copy the image
+  fs.copyFile(sourcePath, destinationPath, (err: any) => {
+    if (err) {
+      console.error('Error copying image:', err);
+      return;
     }
+    console.log('Image copied successfully!');
   });
 
-  res.status(200).json({ taskId: newTaskId });
+  res.status(200).json({  });
 }

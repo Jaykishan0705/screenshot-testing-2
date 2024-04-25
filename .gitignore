@@ -37,6 +37,3 @@ next-env.d.ts
 
 #editor
 .idea/
-
-#lostpixel
-.lostpixel/

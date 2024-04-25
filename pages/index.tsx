@@ -55,7 +55,7 @@ export default function Home() {
           if (data.status === 'completed') {
             // const { data } = await axios.get('/api/getImages');
             // setImages(data);
-            const response = await fetch(`/api/get-images`);
+            const response = await fetch(`/api/getImages`);
             console.log('response',response);
             clearInterval(intervalId);
             setIsLoading(false);

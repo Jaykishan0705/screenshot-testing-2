@@ -21,7 +21,7 @@ const config = {
       { path: '/pricing/consumer-intelligence', name: 'pricing-consumer-intelligence' },
       { path: '/pricing/marketing-and-advertising', name: 'pricing-marketing-and-advertising' },
     ],
-    baseUrl: process.env.TARGET_URL || 'https://www.sprinklr.com',
+    baseUrl: 'https://www.sprinklr.com',
   },
   imagePathBaseline: 'pages/api/database/.lostpixel/baseline',
   imagePathCurrent: 'pages/api/database/.lostpixel/current',
@@ -44,11 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   process.nextTick(async () => {
     try {
-      process.env.TARGET_URL = baseUrl;
       await runner(config);
-
-      process.env.TARGET_URL = compareUrl;
-      await exec('yarn lost-pixel');
 
       tasks.setTaskStatus(newTaskId, 'completed');
     } catch (error) {

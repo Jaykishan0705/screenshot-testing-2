@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { exec as execCallback } from 'child_process';
 
-const exec = (command: string) =>
+const exec = (command) =>
   new Promise(resolve => {
     execCallback(command, (err, stdout) => {
       console.log(stdout);

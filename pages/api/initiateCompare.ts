@@ -13,23 +13,6 @@ const exec = (command: string) =>
     });
   });
 
-const config = {
-  pageShots: {
-    pages: [
-      { path: '/pricing/customer-service/', name: 'pricing-customer-service' },
-      { path: '/pricing/social-media-management/', name: 'pricing-social-media-management' },
-      { path: '/pricing/consumer-intelligence', name: 'pricing-consumer-intelligence' },
-      { path: '/pricing/marketing-and-advertising', name: 'pricing-marketing-and-advertising' },
-    ],
-    baseUrl: 'https://www.sprinklr.com',
-  },
-  imagePathBaseline: 'pages/api/database/.lostpixel/baseline',
-  imagePathCurrent: 'pages/api/database/.lostpixel/current',
-  imagePathDifference: 'pages/api/database/.lostpixel/difference',
-  generateOnly: true,
-  failOnDifference: false,
-  compareEngine: 'odiff',
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { baseUrl, compareUrl } = req.body;
@@ -44,7 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   process.nextTick(async () => {
     try {
-      await runner(config);
+
+      await exec('yarn lost-pixel');
 
       tasks.setTaskStatus(newTaskId, 'completed');
     } catch (error) {
